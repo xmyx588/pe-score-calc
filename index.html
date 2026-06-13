@@ -185,19 +185,19 @@
 <div class="container">
 
 <header>
-  <h1>🏃 汕头中考体育分数计算器</h1>
+  <h1>汕头中考体育分数计算器</h1>
   <p>2026年汕头市中考体育考试项目评分标准</p>
 </header>
 
 <!-- 性别选择 -->
 <div class="card">
-  <div class="card-title">👤 选择性别</div>
+  <div class="card-title">选择性别</div>
   <div class="gender-bar">
     <button class="gender-btn active" id="genderMale" onclick="setGender('male')">
-      <span>👦</span> 男生
+      <span></span> 男生
     </button>
     <button class="gender-btn" id="genderFemale" onclick="setGender('female')">
-      <span>👧</span> 女生
+      <span></span> 女生
     </button>
   </div>
   <p class="tip">选择性别后，下方项目选项会自动更新</p>
@@ -205,7 +205,7 @@
 
 <!-- 跑步项目 -->
 <div class="card">
-  <div class="card-title">🏃 跑步项目</div>
+  <div class="card-title">跑步项目</div>
   <div class="project-block">
     <div style="margin-bottom:12px">
       <div id="run_proj_label" style="font-size:15px;font-weight:600;color:var(--primary);padding:8px 0;"></div>
@@ -220,7 +220,7 @@
 
 <!-- 选项项目 -->
 <div class="card">
-  <div class="card-title">📋 选项</div>
+  <div class="card-title">选项</div>
   <div class="project-block">
     <div style="margin-bottom:12px">
       <label>选考项目</label>
@@ -236,7 +236,7 @@
 </div>
 
 <!-- 计算按钮 -->
-<button class="calc-btn" onclick="calculate()">🧮 计算中考体育成绩</button>
+<button class="calc-btn" onclick="calculate()">计算中考体育成绩</button>
 
 <!-- 结果展示 -->
 <div class="result-box" id="resultBox">
@@ -248,7 +248,7 @@
 
 <!-- 公式说明 -->
 <div class="card" style="margin-top:16px">
-  <div class="card-title">📖 计算公式说明</div>
+  <div class="card-title">计算公式说明</div>
   <div class="formula-box">
     <p><b>① 单项得分：</b>根据输入成绩，查评分标准表得单项得分（0~120分）。</p>
     <p style="margin-top:8px"><b>② 两项总分：</b><code>跑步项目得分 + 选项得分</code>（两项之和封顶200分）</p>
@@ -395,10 +395,10 @@ function populateSelects() {
   const runLabel = document.getElementById("run_proj_label");
   if (currentGender === "male") {
     runInput.value = "1000m";
-    runLabel.textContent = "👦 1000米跑";
+    runLabel.textContent = "1000米跑";
   } else {
     runInput.value = "800m";
-    runLabel.textContent = "👧 800米跑";
+    runLabel.textContent = "800米跑";
   }
   onProjChange("run");
 
@@ -550,8 +550,8 @@ function calculate() {
   const val2Str = (key2 === "1000m" || key2 === "800m") ? secToTime(val2) : val2;
 
   detailEl.innerHTML = `
-    <div class="row"><span>🏃 跑步项目</span><span>${TABLES[key1].label}：${score1} 分</span></div>
-    <div class="row"><span>📋 选考项目</span><span>${TABLES[key2].label}：${score2} 分</span></div>
+    <div class="row"><span>跑步项目</span><span>${TABLES[key1].label}：${score1} 分</span></div>
+    <div class="row"><span>选考项目</span><span>${TABLES[key2].label}：${score2} 分</span></div>
     <div class="row"><span>两项总分</span><span>${rawTotal} 分${rawTotal > 200 ? '（封顶200）' : ''}</span></div>
     <div class="row"><span>计入总分</span><span>${cappedTotal} 分</span></div>
     <div class="row"><span>体育科成绩</span><span>${cappedTotal} × 35% = ${finalScore} 分</span></div>
