@@ -13,9 +13,6 @@
     --text: #1e293b;
     --text2: #64748b;
     --border: #e2e8f0;
-    --success: #059669;
-    --warning: #d97706;
-    --danger: #dc2626;
     --radius: 12px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -71,8 +68,35 @@
   }
   input:focus, select:focus { border-color: var(--primary); }
 
-  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  /* 性别选择器 */
+  .gender-bar {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .gender-btn {
+    width: 120px;
+    height: 44px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .gender-btn:hover { border-color: var(--primary); color: var(--primary); }
+  .gender-btn.active {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary);
+  }
 
   .project-block {
     border: 1.5px solid var(--border);
@@ -127,6 +151,7 @@
   .result-box.show { display: block; }
   .result-label { font-size: 13px; color: var(--text2); margin-bottom: 4px; }
   .result-value { font-size: 36px; font-weight: 700; color: var(--primary); }
+  .result-sub { font-size: 14px; color: var(--text2); margin-top: 4px; }
   .result-detail { margin-top: 16px; font-size: 13px; color: var(--text2); line-height: 2; }
   .result-detail .row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed var(--border); }
   .result-detail .row:last-child { border-bottom: none; font-weight: 600; color: var(--text); font-size: 15px; }
@@ -152,7 +177,6 @@
   .tip { font-size: 12px; color: var(--text2); margin-top: 6px; }
 
   @media (max-width: 600px) {
-    .grid-2, .grid-3 { grid-template-columns: 1fr; }
     body { padding: 12px; }
   }
 </style>
@@ -165,91 +189,62 @@
   <p>2026年汕头市中考体育考试项目评分标准</p>
 </header>
 
-<!-- 项目一 -->
+<!-- 性别选择 -->
 <div class="card">
-  <div class="card-title">📋 考试项目一</div>
+  <div class="card-title">👤 选择性别</div>
+  <div class="gender-bar">
+    <button class="gender-btn active" id="genderMale" onclick="setGender('male')">
+      <span>👦</span> 男生
+    </button>
+    <button class="gender-btn" id="genderFemale" onclick="setGender('female')">
+      <span>👧</span> 女生
+    </button>
+  </div>
+  <p class="tip">选择性别后，下方项目选项会自动更新</p>
+</div>
+
+<!-- 跑步项目 -->
+<div class="card">
+  <div class="card-title">🏃 跑步项目</div>
   <div class="project-block">
-    <h3>选择项目并输入成绩</h3>
-    <div class="grid-2" style="margin-bottom:12px">
-      <div>
-        <label>考试项目</label>
-        <select id="proj1_name" onchange="onProjChange(1)">
-          <option value="">-- 请选择 --</option>
-          <option value="1000m">1000米跑（男）</option>
-          <option value="800m">800米跑（女）</option>
-          <option value="jump">立定跳远</option>
-          <option value="ball">投掷实心球</option>
-          <option value="rope">一分钟跳绳</option>
-          <option value="pullup">引体向上（男）</option>
-          <option value="situp">一分钟仰卧起坐（女）</option>
-        </select>
-      </div>
-      <div>
-        <label>性别</label>
-        <select id="proj1_gender">
-          <option value="male">男</option>
-          <option value="female">女</option>
-        </select>
-      </div>
+    <div style="margin-bottom:12px">
+      <label>跑步项目</label>
+      <select id="run_name" onchange="onProjChange('run')">
+        <!-- 由 JS 动态填充 -->
+      </select>
     </div>
-    <div id="proj1_input_area">
-      <p style="font-size:13px;color:#94a3b8">请先选择考试项目</p>
+    <div id="run_input_area">
+      <p style="font-size:13px;color:#94a3b8">请先选择跑步项目</p>
     </div>
-    <div id="proj1_score_display" style="margin-top:10px;font-size:14px;font-weight:600;color:var(--primary)"></div>
+    <div id="run_score_display" style="margin-top:10px;font-size:14px;font-weight:600;color:var(--primary)"></div>
   </div>
 </div>
 
-<!-- 项目二 -->
+<!-- 选项项目 -->
 <div class="card">
-  <div class="card-title">📋 考试项目二</div>
+  <div class="card-title">📋 选项</div>
   <div class="project-block">
-    <h3>选择项目并输入成绩</h3>
-    <div class="grid-2" style="margin-bottom:12px">
-      <div>
-        <label>考试项目</label>
-        <select id="proj2_name" onchange="onProjChange(2)">
-          <option value="">-- 请选择 --</option>
-          <option value="1000m">1000米跑（男）</option>
-          <option value="800m">800米跑（女）</option>
-          <option value="jump">立定跳远</option>
-          <option value="ball">投掷实心球</option>
-          <option value="rope">一分钟跳绳</option>
-          <option value="pullup">引体向上（男）</option>
-          <option value="situp">一分钟仰卧起坐（女）</option>
-        </select>
-      </div>
-      <div>
-        <label>性别</label>
-        <select id="proj2_gender">
-          <option value="male">男</option>
-          <option value="female">女</option>
-        </select>
-      </div>
+    <div style="margin-bottom:12px">
+      <label>选考项目</label>
+      <select id="opt_name" onchange="onProjChange('opt')">
+        <!-- 由 JS 动态填充 -->
+      </select>
     </div>
-    <div id="proj2_input_area">
-      <p style="font-size:13px;color:#94a3b8">请先选择考试项目</p>
+    <div id="opt_input_area">
+      <p style="font-size:13px;color:#94a3b8">请先选择选考项目</p>
     </div>
-    <div id="proj2_score_display" style="margin-top:10px;font-size:14px;font-weight:600;color:var(--primary)"></div>
+    <div id="opt_score_display" style="margin-top:10px;font-size:14px;font-weight:600;color:var(--primary)"></div>
   </div>
-</div>
-
-<!-- 《标准》测试成绩 -->
-<div class="card">
-  <div class="card-title">📝 《标准》测试成绩</div>
-  <div style="margin-bottom:8px">
-    <label>《国家学生体质健康标准》测试成绩（满分120分制，此项为已知固定分）</label>
-    <input type="number" id="std_score" min="0" max="120" step="0.1" placeholder="请输入《标准》测试成绩，如 85" />
-  </div>
-  <p class="tip">《标准》测试成绩由学校评定，满分120分，此处直接填入你的得分。</p>
 </div>
 
 <!-- 计算按钮 -->
-<button class="calc-btn" onclick="calculate()">🧮 计算中考体育科成绩</button>
+<button class="calc-btn" onclick="calculate()">🧮 计算中考体育成绩</button>
 
 <!-- 结果展示 -->
 <div class="result-box" id="resultBox">
-  <div class="result-label">中考体育科总成绩</div>
+  <div class="result-label">中考体育科成绩</div>
   <div class="result-value" id="totalScore">--</div>
+  <div class="result-sub" id="totalSub"></div>
   <div class="result-detail" id="resultDetail"></div>
 </div>
 
@@ -257,32 +252,32 @@
 <div class="card" style="margin-top:16px">
   <div class="card-title">📖 计算公式说明</div>
   <div class="formula-box">
-    <p><b>① 单项目得分：</b>根据输入成绩，查《2026年汕头市中考体育考试项目评分标准》表，得到该项目得分（0~120分）。</p>
-    <p style="margin-top:8px"><b>② 中考体育考试成绩 = </b><code>两项平均分 × 63%</code><br/>
-    其中：两项平均分 = (项目一得分 + 项目二得分) ÷ 2<br/>
-    （平均分超过100分的按100分计）</p>
-    <p style="margin-top:8px"><b>③ 中考体育科成绩 = </b><code>《标准》测试成绩 + 中考体育考试成绩</code><br/>
-    （最终成绩四舍五入取整数）</p>
+    <p><b>① 单项得分：</b>根据输入成绩，查评分标准表得单项得分（0~120分）。</p>
+    <p style="margin-top:8px"><b>② 两项总分：</b><code>跑步项目得分 + 选项得分</code>（两项之和封顶200分）</p>
+    <p style="margin-top:8px"><b>③ 中考体育科成绩 = </b><code>两项总分 × 35%</code><br/>
+    四舍五入取整，满分 <b>70 分</b></p>
   </div>
 </div>
 
 </div>
 
 <script>
+// ===== 全局状态 =====
+let currentGender = "male";
+
 // ===== 评分标准数据 =====
-// 格式: [分值, 男成绩, 女成绩] 或 [分值, 成绩]（男女同标）
 const TABLES = {
-  "1000m": { // 男1000米，单位：秒（mm:ss 转秒）
-    unit: "秒", label: "1000米跑（男）",
+  "1000m": {
+    unit: "秒", label: "1000米跑", gender: "male",
     data: [
       [120, 177], [115, 187], [110, 197], [105, 207], [100, 217],
       [95, 225], [90, 233], [85, 241], [80, 249], [75, 257],
       [70, 265], [65, 270], [60, 275], [55, 280], [50, 285],
-      [45, 290], [40, 295], [35, 300], [30, 305], [25, 999] // 25分以下无数据
+      [45, 290], [40, 295], [35, 300], [30, 305], [25, 999]
     ]
   },
-  "800m": { // 女800米
-    unit: "秒", label: "800米跑（女）",
+  "800m": {
+    unit: "秒", label: "800米跑", gender: "female",
     data: [
       [120, 162], [115, 172], [110, 182], [105, 192], [100, 202],
       [95, 210], [90, 218], [85, 226], [80, 234], [75, 242],
@@ -290,8 +285,8 @@ const TABLES = {
       [45, 275], [40, 280], [35, 285], [30, 290], [25, 999]
     ]
   },
-  "jump": { // 立定跳远，单位：米，格式：[分, 男, 女]
-    unit: "米", label: "立定跳远",
+  "jump": {
+    unit: "米", label: "立定跳远", gender: "both",
     data: [
       [120, 2.85, 2.37], [115, 2.75, 2.27], [110, 2.65, 2.17],
       [105, 2.55, 2.07], [100, 2.45, 1.97], [95, 2.35, 1.87],
@@ -302,8 +297,8 @@ const TABLES = {
       [30, 1.96, 1.48], [25, 0, 0]
     ]
   },
-  "ball": { // 投掷实心球，单位：米，[分, 男, 女]
-    unit: "米", label: "投掷实心球",
+  "ball": {
+    unit: "米", label: "投掷实心球", gender: "both",
     data: [
       [120, 13.4, 10.4], [115, 12.6, 9.6], [110, 11.8, 8.8],
       [105, 11.0, 8.0], [100, 10.2, 7.2], [95, 9.4, 6.4],
@@ -314,8 +309,8 @@ const TABLES = {
       [30, 5.6, 3.55], [25, 0, 0]
     ]
   },
-  "rope": { // 一分钟跳绳，单位：次，男女同标
-    unit: "次", label: "一分钟跳绳",
+  "rope": {
+    unit: "次", label: "一分钟跳绳", gender: "both",
     data: [
       [120, 239], [115, 224], [110, 209], [105, 194], [100, 179],
       [95, 164], [90, 156], [85, 148], [80, 140], [75, 132],
@@ -323,8 +318,8 @@ const TABLES = {
       [45, 84], [40, 76], [35, 68], [30, 60], [25, 0]
     ]
   },
-  "pullup": { // 引体向上（男），单位：次
-    unit: "次", label: "引体向上（男）",
+  "pullup": {
+    unit: "次", label: "引体向上", gender: "male",
     data: [
       [120, 21], [115, 19], [110, 17], [105, 15], [100, 13],
       [95, 11], [90, 10], [85, 9], [80, 8], [75, 7],
@@ -332,8 +327,8 @@ const TABLES = {
       [45, 4], [40, 3], [35, 3], [30, 2], [25, 0]
     ]
   },
-  "situp": { // 一分钟仰卧起坐（女），单位：次
-    unit: "次", label: "一分钟仰卧起坐（女）",
+  "situp": {
+    unit: "次", label: "一分钟仰卧起坐", gender: "female",
     data: [
       [120, 65], [115, 60], [110, 55], [105, 50], [100, 45],
       [95, 40], [90, 38], [85, 36], [80, 34], [75, 32],
@@ -345,95 +340,138 @@ const TABLES = {
 
 // ===== 工具函数 =====
 function timeToSec(t) {
-  // 支持 "3'37"" 或 "3:37" 或 "217" 格式
   t = t.trim();
   if (/^\d+$/.test(t)) return parseInt(t);
   const m = t.match(/(\d+)[\:'′]([\d\.]+)/);
   if (m) return parseInt(m[1]) * 60 + parseFloat(m[2]);
   return NaN;
 }
-
 function secToTime(s) {
-  const m = Math.floor(s / 60);
+  const min = Math.floor(s / 60);
   const sec = s % 60;
-  return `${m}'${sec < 10 ? '0' : ''}${sec}"`;
+  return `${min}'${sec < 10 ? '0' : ''}${sec}"`;
 }
 
-// ===== 根据成绩查分 =====
-function lookupScore(projKey, gender, value) {
+// ===== 查表得分数 =====
+function lookupScore(projKey, value) {
   const table = TABLES[projKey];
   if (!table) return null;
-
-  // 时间类项目（跑步）：成绩越小分越高，表格按分高→低排列
-  // 非时间类（距离/次数）：成绩越大分越高
   const isTime = (projKey === "1000m" || projKey === "800m");
+  const gender = currentGender;
 
-  let bestScore = 0;
-  // 表格按分值从高到低排，遍历找到第一个达标的即可
   for (const row of table.data) {
     let threshold;
     if (row.length === 2) {
-      threshold = row[1]; // 男女同标
+      threshold = row[1];
     } else {
       threshold = gender === "male" ? row[1] : row[2];
     }
     const score = row[0];
-
     if (isTime) {
-      // 跑步：value <= threshold 表示跑得够快，得此分
-      if (value <= threshold) { bestScore = score; break; }
+      if (value <= threshold) return score;
     } else {
-      // 其他：value >= threshold 表示成绩够好，得此分
-      if (value >= threshold) { bestScore = score; break; }
+      if (value >= threshold) return score;
     }
   }
-  return bestScore;
+  return 0;
+}
+
+// ===== 性别切换 =====
+function setGender(g) {
+  currentGender = g;
+  document.getElementById("genderMale").classList.toggle("active", g === "male");
+  document.getElementById("genderFemale").classList.toggle("active", g === "female");
+  populateSelects();
+  // 清空输入和显示
+  ["run", "opt"].forEach(id => {
+    document.getElementById(`${id}_input_area`).innerHTML = '<p style="font-size:13px;color:#94a3b8">请先选择项目</p>';
+    document.getElementById(`${id}_score_display`).textContent = "";
+  });
+  document.getElementById("resultBox").classList.remove("show");
+}
+
+// ===== 填充下拉选项 =====
+function populateSelects() {
+  // 跑步项目：男1000米，女800米
+  const runSel = document.getElementById("run_name");
+  runSel.innerHTML = "";
+  if (currentGender === "male") {
+    runSel.innerHTML = '<option value="1000m">1000米跑</option>';
+  } else {
+    runSel.innerHTML = '<option value="800m">800米跑</option>';
+  }
+  onProjChange("run");
+
+  // 选项项目：根据性别动态生成
+  const optSel = document.getElementById("opt_name");
+  optSel.innerHTML = '<option value="">-- 请选择 --</option>';
+  const optProjects = currentGender === "male"
+    ? [["jump", "立定跳远"], ["ball", "投掷实心球"], ["rope", "一分钟跳绳"], ["pullup", "引体向上"]]
+    : [["jump", "立定跳远"], ["ball", "投掷实心球"], ["rope", "一分钟跳绳"], ["situp", "一分钟仰卧起坐"]];
+  optProjects.forEach(([key, label]) => {
+    const opt = document.createElement("option");
+    opt.value = key;
+    opt.textContent = label;
+    optSel.appendChild(opt);
+  });
+  onProjChange("opt");
 }
 
 // ===== 项目选择变化 =====
-function onProjChange(num) {
-  const sel = document.getElementById(`proj${num}_name`);
+function onProjChange(id) {
+  const sel = document.getElementById(`${id}_name`);
   const key = sel.value;
-  const area = document.getElementById(`proj${num}_input_area`);
-  const display = document.getElementById(`proj${num}_score_display`);
+  const area = document.getElementById(`${id}_input_area`);
+  const display = document.getElementById(`${id}_score_display`);
   display.textContent = "";
 
   if (!key) {
-    area.innerHTML = '<p style="font-size:13px;color:#94a3b8">请先选择考试项目</p>';
+    area.innerHTML = '<p style="font-size:13px;color:#94a3b8">请先选择项目</p>';
     return;
   }
 
   const table = TABLES[key];
+  const gender = currentGender;
   let inputHtml = "";
 
   if (key === "1000m" || key === "800m") {
+    const fullSec = key === "1000m" ? 177 : 162;
+    const fullTime = secToTime(fullSec);
     inputHtml = `
-      <label>成绩（格式：3'37" 或 3:37 或直接填秒数 217）</label>
-      <input type="text" id="proj${num}_value" placeholder='如：3\'37" 或 217' oninput="onValueInput(${num})" />
-      <p class="tip">参考：满分${key==="1000m"?'2\'57" (177秒)':'2\'42" (162秒)'}</p>
+      <label>成绩（格式：3'37" 或 3:37 或直接填秒数）</label>
+      <input type="text" id="${id}_value" placeholder='如：3\'37" 或 217' oninput="onValueInput('${id}')" />
+      <p class="tip">参考：满分 ${fullTime}（${fullSec}秒）</p>
     `;
-  } else if (key === "jump" || key === "ball") {
+  } else if (key === "jump") {
+    const mFull = "2.85", fFull = "2.37";
     inputHtml = `
       <label>成绩（单位：米，如 2.45）</label>
-      <input type="number" id="proj${num}_value" step="0.01" placeholder="如 2.45" oninput="onValueInput(${num})" />
-      <p class="tip">参考：男生满分${key==="jump"?'2.85':'13.4'}米，女生满分${key==="jump"?'2.37':'10.4'}米</p>
+      <input type="number" id="${id}_value" step="0.01" placeholder="如 2.45" oninput="onValueInput('${id}')" />
+      <p class="tip">参考：满分 ${gender==="male"?mFull:fFull} 米</p>
+    `;
+  } else if (key === "ball") {
+    const mFull = "13.4", fFull = "10.4";
+    inputHtml = `
+      <label>成绩（单位：米，如 10.2）</label>
+      <input type="number" id="${id}_value" step="0.01" placeholder="如 10.2" oninput="onValueInput('${id}')" />
+      <p class="tip">参考：满分 ${gender==="male"?mFull:fFull} 米</p>
     `;
   } else if (key === "rope") {
     inputHtml = `
       <label>成绩（单位：次/分钟，如 179）</label>
-      <input type="number" id="proj${num}_value" step="1" placeholder="如 179" oninput="onValueInput(${num})" />
+      <input type="number" id="${id}_value" step="1" placeholder="如 179" oninput="onValueInput('${id}')" />
       <p class="tip">参考：满分 239 次/分钟</p>
     `;
   } else if (key === "pullup") {
     inputHtml = `
       <label>成绩（单位：次，如 13）</label>
-      <input type="number" id="proj${num}_value" step="1" placeholder="如 13" oninput="onValueInput(${num})" />
+      <input type="number" id="${id}_value" step="1" placeholder="如 13" oninput="onValueInput('${id}')" />
       <p class="tip">参考：满分 21 次</p>
     `;
   } else if (key === "situp") {
     inputHtml = `
       <label>成绩（单位：次/分钟，如 45）</label>
-      <input type="number" id="proj${num}_value" step="1" placeholder="如 45" oninput="onValueInput(${num})" />
+      <input type="number" id="${id}_value" step="1" placeholder="如 45" oninput="onValueInput('${id}')" />
       <p class="tip">参考：满分 65 次/分钟</p>
     `;
   }
@@ -441,18 +479,16 @@ function onProjChange(num) {
   area.innerHTML = inputHtml;
 }
 
-// ===== 成绩输入时实时显示得分 =====
-function onValueInput(num) {
-  const key = document.getElementById(`proj${num}_name`).value;
-  const gender = document.getElementById(`proj${num}_gender`).value;
-  const display = document.getElementById(`proj${num}_score_display`);
-
+// ===== 实时显示得分 =====
+function onValueInput(id) {
+  const key = document.getElementById(`${id}_name`).value;
+  const display = document.getElementById(`${id}_score_display`);
   if (!key) return;
 
-  let value;
-  const raw = document.getElementById(`proj${num}_value`).value;
+  const raw = document.getElementById(`${id}_value`)?.value;
   if (!raw) { display.textContent = ""; return; }
 
+  let value;
   if (key === "1000m" || key === "800m") {
     value = timeToSec(raw);
     if (isNaN(value)) { display.textContent = "⚠️ 时间格式错误"; return; }
@@ -461,75 +497,69 @@ function onValueInput(num) {
     if (isNaN(value)) { display.textContent = "⚠️ 请输入数字"; return; }
   }
 
-  const score = lookupScore(key, gender, value);
+  const score = lookupScore(key, value);
   if (score === null) { display.textContent = "⚠️ 无法查分"; return; }
 
   let badgeClass = "score-high";
   if (score < 60) badgeClass = "score-low";
   else if (score < 90) badgeClass = "score-mid";
 
-  let valueStr = (key === "1000m" || key === "800m") ? secToTime(value) : value;
+  const valueStr = (key === "1000m" || key === "800m") ? secToTime(value) : value;
   display.innerHTML = `成绩 ${valueStr}${TABLES[key].unit} → 得分：<span class="score-badge ${badgeClass}">${score} 分</span>`;
 }
 
 // ===== 主计算 =====
 function calculate() {
-  // 获取项目一
-  const key1 = document.getElementById("proj1_name").value;
-  const gender1 = document.getElementById("proj1_gender").value;
-  const raw1 = document.getElementById("proj1_value")?.value;
-  // 获取项目二
-  const key2 = document.getElementById("proj2_name").value;
-  const gender2 = document.getElementById("proj2_gender").value;
-  const raw2 = document.getElementById("proj2_value")?.value;
-  // 标准成绩
-  const stdScore = parseFloat(document.getElementById("std_score").value);
+  const key1 = document.getElementById("run_name").value;
+  const key2 = document.getElementById("opt_name").value;
+  const raw1 = document.getElementById("run_value")?.value;
+  const raw2 = document.getElementById("opt_value")?.value;
 
-  // 验证
-  if (!key1 || !key2) { alert("请选择两个考试项目"); return; }
+  if (!key1 || !key2) { alert("请选择考试项目"); return; }
   if (!raw1 || !raw2) { alert("请输入两个项目的成绩"); return; }
-  if (isNaN(stdScore) || stdScore < 0 || stdScore > 120) { alert("请输入有效的《标准》测试成绩（0-120）"); return; }
 
   let val1, val2;
-  if (key1 === "1000m" || key1 === "800m") { val1 = timeToSec(raw1); }
-  else { val1 = parseFloat(raw1); }
-  if (key2 === "1000m" || key2 === "800m") { val2 = timeToSec(raw2); }
-  else { val2 = parseFloat(raw2); }
+  if (key1 === "1000m" || key1 === "800m") val1 = timeToSec(raw1);
+  else val1 = parseFloat(raw1);
+  if (key2 === "1000m" || key2 === "800m") val2 = timeToSec(raw2);
+  else val2 = parseFloat(raw2);
 
   if (isNaN(val1) || isNaN(val2)) { alert("成绩格式错误，请检查"); return; }
 
-  const score1 = lookupScore(key1, gender1, val1);
-  const score2 = lookupScore(key2, gender2, val2);
+  const score1 = lookupScore(key1, val1);
+  const score2 = lookupScore(key2, val2);
 
-  // 平均分（超过100按100计）
-  const avg = Math.min((score1 + score2) / 2, 100);
-  // 中考体育考试成绩 = 平均分 × 63%，四舍五入
-  const examScore = Math.round(avg * 0.63);
-  // 中考体育科成绩 = 标准成绩 + 考试成绩，四舍五入
-  const total = Math.round(stdScore + examScore);
+  // 两项总分，封顶200
+  const rawTotal = score1 + score2;
+  const cappedTotal = Math.min(rawTotal, 200);
+  // 中考体育科成绩 = 总分 × 35%，四舍五入
+  const finalScore = Math.round(cappedTotal * 0.35);
 
-  // 显示结果
   const resultBox = document.getElementById("resultBox");
   const totalEl = document.getElementById("totalScore");
+  const subEl = document.getElementById("totalSub");
   const detailEl = document.getElementById("resultDetail");
 
   resultBox.classList.add("show");
-  totalEl.textContent = total + " 分";
+  totalEl.textContent = finalScore + " 分";
+  subEl.textContent = `（满分 70 分）`;
 
   const val1Str = (key1 === "1000m" || key1 === "800m") ? secToTime(val1) : val1;
   const val2Str = (key2 === "1000m" || key2 === "800m") ? secToTime(val2) : val2;
 
   detailEl.innerHTML = `
-    <div class="row"><span>项目一得分</span><span>${TABLES[key1].label}：${score1} 分</span></div>
-    <div class="row"><span>项目二得分</span><span>${TABLES[key2].label}：${score2} 分</span></div>
-    <div class="row"><span>两项平均分</span><span>${((score1+score2)/2).toFixed(1)} 分（封顶100）</span></div>
-    <div class="row"><span>中考体育考试成绩</span><span>${avg} × 63% = ${examScore} 分</span></div>
-    <div class="row"><span>《标准》测试成绩</span><span>${stdScore} 分</span></div>
-    <div class="row"><span>🏆 中考体育科总成绩</span><span>${total} 分</span></div>
+    <div class="row"><span>🏃 跑步项目</span><span>${TABLES[key1].label}：${score1} 分</span></div>
+    <div class="row"><span>📋 选考项目</span><span>${TABLES[key2].label}：${score2} 分</span></div>
+    <div class="row"><span>两项总分</span><span>${rawTotal} 分${rawTotal > 200 ? '（封顶200）' : ''}</span></div>
+    <div class="row"><span>计入总分</span><span>${cappedTotal} 分</span></div>
+    <div class="row"><span>体育科成绩</span><span>${cappedTotal} × 35% = ${finalScore} 分</span></div>
   `;
 
   resultBox.scrollIntoView({ behavior: "smooth", block: "center" });
 }
+
+// ===== 初始化 =====
+populateSelects();
 </script>
 </body>
 </html>
