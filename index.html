@@ -208,13 +208,11 @@
   <div class="card-title">🏃 跑步项目</div>
   <div class="project-block">
     <div style="margin-bottom:12px">
-      <label>跑步项目</label>
-      <select id="run_name" onchange="onProjChange('run')">
-        <!-- 由 JS 动态填充 -->
-      </select>
+      <div id="run_proj_label" style="font-size:15px;font-weight:600;color:var(--primary);padding:8px 0;"></div>
+      <input type="hidden" id="run_name" value="" />
     </div>
     <div id="run_input_area">
-      <p style="font-size:13px;color:#94a3b8">请先选择跑步项目</p>
+      <p style="font-size:13px;color:#94a3b8">请先选择性别</p>
     </div>
     <div id="run_score_display" style="margin-top:10px;font-size:14px;font-weight:600;color:var(--primary)"></div>
   </div>
@@ -392,13 +390,15 @@ function setGender(g) {
 
 // ===== 填充下拉选项 =====
 function populateSelects() {
-  // 跑步项目：男1000米，女800米
-  const runSel = document.getElementById("run_name");
-  runSel.innerHTML = "";
+  // 跑步项目：男1000米，女800米（直接显示，无需选择）
+  const runInput = document.getElementById("run_name");
+  const runLabel = document.getElementById("run_proj_label");
   if (currentGender === "male") {
-    runSel.innerHTML = '<option value="1000m">1000米跑</option>';
+    runInput.value = "1000m";
+    runLabel.textContent = "👦 1000米跑";
   } else {
-    runSel.innerHTML = '<option value="800m">800米跑</option>';
+    runInput.value = "800m";
+    runLabel.textContent = "👧 800米跑";
   }
   onProjChange("run");
 
@@ -435,12 +435,14 @@ function onProjChange(id) {
   let inputHtml = "";
 
   if (key === "1000m" || key === "800m") {
-    const fullSec = key === "1000m" ? 177 : 162;
+    const fullSec = key === "1000m" ? 217 : 202;
     const fullTime = secToTime(fullSec);
+    const topSec = key === "1000m" ? 177 : 162;
+    const topTime = secToTime(topSec);
     inputHtml = `
       <label>成绩（格式：3'37" 或 3:37 或直接填秒数）</label>
-      <input type="text" id="${id}_value" placeholder='如：3\'37" 或 217' oninput="onValueInput('${id}')" />
-      <p class="tip">参考：满分 ${fullTime}（${fullSec}秒）</p>
+      <input type="text" id="${id}_value" placeholder='如：3\'37" 或 217' oninput="onValueInput('${id}')" style="font-size:16px;" />
+      <p class="tip">满分 ${topTime}（${topSec}秒）｜100分 ${fullTime}（${fullSec}秒）</p>
     `;
   } else if (key === "jump") {
     const mFull = "2.85", fFull = "2.37";
