@@ -380,9 +380,9 @@ function setGender(g) {
   document.getElementById("genderMale").classList.toggle("active", g === "male");
   document.getElementById("genderFemale").classList.toggle("active", g === "female");
   populateSelects();
-  // 清空输入和显示
+  // populateSelects 已经调用了 onProjChange，会重新生成输入框
+  // 只需要清空分数显示
   ["run", "opt"].forEach(id => {
-    document.getElementById(`${id}_input_area`).innerHTML = '<p style="font-size:13px;color:#94a3b8">请先选择项目</p>';
     document.getElementById(`${id}_score_display`).textContent = "";
   });
   document.getElementById("resultBox").classList.remove("show");
